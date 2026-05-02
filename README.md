@@ -12,15 +12,15 @@ As an independent builder, I can't open-source the full product. But the archite
 ## System overview
 
 ```
-┌─────────────────┐     ┌───────────────────┐     ┌───────────────┐
-│  Astro Landing   │     │  Next.js Web Panel │     │  Supabase     │
-│  (marketing)     │     │  (admin portal)    │────▶│  PostgreSQL   │
-└─────────────────┘     └───────────────────┘     └───────────────┘
-                               │
+┌─────────────────┐     ┌───────────────────┐     ┌──────────────────┐
+│  Astro Landing   │     │  Next.js Web Panel │     │  Supabase        │
+│  (marketing)     │     │  (admin portal)    │────▶│  PostgreSQL      │
+└─────────────────┘     └───────────────────┘     │  Edge Functions  │
+                               │                  └──────────────────┘
                                ▼
                         ┌───────────────────┐
                         │  Cloudflare       │
-                        │  (CDN + edge)     │
+                        │  (CDN + DNS + WAF)│
                         └───────────────────┘
                                │
                                ▼
@@ -38,7 +38,7 @@ As an independent builder, I can't open-source the full product. But the archite
 |---|----------|--------|-----|
 | 1 | Astro for marketing landing + Next.js for admin panel | Accepted | [ADR-001](docs/adr/001-astro-nextjs-split.md) |
 | 2 | Supabase/PostgreSQL as primary data layer | Accepted | [ADR-002](docs/adr/002-supabase-postgresql.md) |
-| 3 | Cloudflare for CDN, edge, and deployment | Accepted | [ADR-003](docs/adr/003-cloudflare-deploy.md) |
+| 3 | Cloudflare for CDN, DNS, WAF, and deployment | Accepted | [ADR-003](docs/adr/003-cloudflare-deploy.md) |
 | 4 | CI/CD guardrails with versioned guidelines and lint enforcement | Accepted | [ADR-004](docs/adr/004-ci-guardrails.md) |
 | 5 | Offline-first as a product principle (Flutter planned) | Accepted | [ADR-005](docs/adr/005-offline-first-principle.md) |
 
@@ -48,8 +48,8 @@ As an independent builder, I can't open-source the full product. But the archite
 |-------|-----------|
 | **Landing** | Astro |
 | **Web Panel** | Next.js, TypeScript |
-| **Data** | Supabase, PostgreSQL |
-| **Infra** | Cloudflare (CDN, edge, deployment) |
+| **Data** | Supabase, PostgreSQL, Edge Functions |
+| **Infra** | Cloudflare (CDN, DNS, WAF, deployment) |
 | **Mobile** | Flutter (planned, part of broader ecosystem) |
 | **Delivery** | CI/CD pipelines, AI-assisted delivery guardrails, versioned guidelines |
 

@@ -5,7 +5,7 @@
 ```
                          ┌─────────────────────────────────┐
                          │         Cloudflare              │
-                         │   (CDN + DNS + Edge + WAF)      │
+                         │   (CDN + DNS + WAF)             │
                          └──────────────┬──────────────────┘
                                         │
                     ┌───────────────────┼───────────────────┐
@@ -19,6 +19,7 @@
                                │     Supabase      │
                                │   (Auth + Data)   │
                                │   PostgreSQL      │
+                               │   Edge Functions  │
                                └──────────────────┘
                                         │
                                ┌────────▼─────────┐
@@ -32,8 +33,9 @@
 1. Users visit the Astro landing for product information
 2. Authenticated users access the Next.js admin panel
 3. Panel communicates with Supabase (REST + Realtime)
-4. Cloudflare handles DNS, CDN, edge caching, and WAF
-5. CI/CD pipeline enforces quality gates on every push
+4. Cloudflare handles DNS, CDN, and WAF
+5. Supabase Edge Functions handle serverless compute
+6. CI/CD pipeline enforces quality gates on every push
 
 ## Offline-First (Future)
 
