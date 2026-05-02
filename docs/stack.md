@@ -6,8 +6,8 @@
 |-------|-----------|---------|
 | Landing | Astro | Marketing site, SEO, fast static delivery |
 | Web Panel | Next.js | Admin portal, authenticated workflows |
-| Data | Supabase | Auth, PostgreSQL, Realtime subscriptions |
-| Infra | Cloudflare | CDN, DNS, edge, WAF, deployment |
+| Data | Supabase | Auth, PostgreSQL, Realtime subscriptions, Edge Functions |
+| Infra | Cloudflare | CDN, DNS, WAF, deployment |
 | CI/CD | GitHub Actions | Quality gates, lint, type checks, guardrails |
 | AI Delivery | Versioned guidelines + custom lint | Structured AI-assisted delivery |
 

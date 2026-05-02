@@ -10,9 +10,10 @@ WorkTracker needs a reliable, managed data layer with built-in auth, real-time c
 
 ## Decision
 
-Use **Supabase** as the primary data layer:
+Use **Supabase** as the primary data and compute layer:
 - PostgreSQL for relational data (time entries, users, compliance records)
 - Supabase Auth for authentication
+- Supabase Edge Functions for serverless compute (replaces Cloudflare Workers)
 - Supabase client libraries for web and (future) mobile integration
 
 ## Consequences
@@ -20,6 +21,7 @@ Use **Supabase** as the primary data layer:
 - Managed PostgreSQL with automated backups and RLS (Row Level Security).
 - Built-in auth reduces custom auth implementation burden.
 - Real-time subscriptions available for live updates.
+- Edge Functions provide serverless compute without a separate Cloudflare Workers setup.
 - Vendor dependency on Supabase, but PostgreSQL remains portable via standard SQL.
 - RLS policies enforce data access boundaries at the database level.
 
