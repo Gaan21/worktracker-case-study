@@ -6,9 +6,11 @@ privately, for reasons explained at the end.
 
 ## The isolation problem
 
-Every company on WorkTracker holds records about its employees' working hours, and in some
-configurations their location at the moment they clocked in. A leak across two companies is
-not a degraded experience. It is a personal data breach involving employment records.
+WorkTracker is multi-tenant: a company's records cover its employees' working hours and, where
+the company has enabled it, their location at the moment they clocked in. A leak across two
+companies would not be a degraded experience. It would be a personal data breach involving
+employment records, which is why isolation is treated as a design constraint rather than a
+feature.
 
 Isolation therefore cannot depend on a query being written correctly. It has to hold even when
 the query is wrong.
@@ -28,8 +30,8 @@ write access on system tables such as notification logs, and guards that prevent
 administrator from editing identity or company assignment even on records they otherwise
 control.
 
-**Server-side operations** handle every write that carries consequences: creating a clock
-movement, changing a membership status, resolving an incident, issuing or accepting an
+**Server-side operations** are the supported path for writes that carry consequences: creating
+a clock movement, changing a membership status, resolving an incident, issuing or accepting an
 invitation, registering a company. These run in Edge Functions and `SECURITY DEFINER` database
 functions that validate the caller, the target, the company relationship, the sequence and the
 timing, and write the audit trail in the same transaction as the change.
@@ -123,17 +125,15 @@ deadline; a rule does not get tired.
 
 ## The risk register
 
-Eight security and correctness weaknesses are currently tracked as named entries in the private
-product knowledge base. Each records what the weakness is, what it affects, the evidence
-establishing it, and its status.
+A private risk register tracks known security and correctness risks. Each entry records what
+the risk is, what it affects, the evidence establishing it, its impact, and its mitigation
+status. Entries distinguish hardening gaps from actual breaches of a guarantee, so that
+severity is a judgement made once and recorded rather than re-argued each time.
 
-They are not published here, and that is a deliberate decision rather than an omission. They
-describe specific, currently unmitigated properties of a system that is live. Publishing them
-would be publishing an exploitation path against real companies' employment data. The maturity
-signal is that the register exists, is maintained, and distinguishes hardening gaps from
-breaches — not that its contents are visible.
-
-They are available to discuss in an interview, in a setting where context can go with them.
+The register is maintained privately and its contents are not published here. Sensitive
+implementation details and unresolved risks are intentionally excluded from this case study.
+What is worth showing publicly is the practice: unresolved risks are written down, attributed
+to evidence, and tracked, rather than living as things I intend to remember.
 
 ## What is deliberately not documented publicly
 

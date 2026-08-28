@@ -24,8 +24,8 @@ applications are distributed as beta builds through a closed Google Play test an
 
 WorkTracker does not yet have meaningful commercial traction, and this case study makes no
 claims about users, revenue or adoption. What it documents is the engineering: the decisions,
-the constraints that shaped them, and the system that keeps a single engineer shipping
-reliable changes.
+the constraints that shaped them, and the system that lets a single engineer ship changes at
+pace without relying on memory to catch mistakes.
 
 ## Architecture at a glance
 
@@ -63,8 +63,9 @@ flowchart TB
 ```
 
 The Flutter app is the employee client and works offline. The Next.js panel is deliberately
-scoped to administration. Every write that matters passes through a server-side boundary, and
-PostgreSQL Row Level Security is the last line of defence rather than the only one.
+scoped to administration. Writes that carry consequences are routed through a server-side
+boundary, and PostgreSQL Row Level Security is the layer that holds when something goes around
+it rather than the only line of defence.
 
 ## Where to go next
 
@@ -75,12 +76,12 @@ PostgreSQL Row Level Security is the last line of defence rather than the only o
 | [Security and multi-tenancy](docs/security-and-multitenancy.md) | Company isolation, capability-based authorization, append-only audit history |
 | [Compliance by design](docs/compliance-by-design.md) | Turning Spanish and EU recordkeeping duties into product and schema requirements |
 | [AI-assisted engineering workflow](docs/ai-engineering-workflow.md) | How agents are scoped, constrained, reviewed, and how failures become rules |
-| [Failure case: the UTC display regression](docs/failure-case-timezone.md) | A real defect, its root cause, and the six changes made so the class cannot recur |
+| [Failure case: the UTC display regression](docs/failure-case-timezone.md) | A real defect, its root cause, and the six changes made to reduce the chance of recurrence |
 | [Decision records](docs/adr/) | Nine ADRs covering the decisions with real trade-offs |
 
 ## Engineering challenges worth reading about
 
-**Offline clocking that cannot duplicate records.** A clock-in is a labour record with legal
+**Offline clocking that does not turn retries into duplicate records.** A clock-in is a labour record with legal
 weight. It has to survive a phone with no signal, and it must not turn into two records when
 the phone reconnects and the user has retried. The answer is an outbox in local SQLite with a
 client-generated idempotency key that the server honours for 72 hours.

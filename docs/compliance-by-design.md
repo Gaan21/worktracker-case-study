@@ -90,9 +90,10 @@ work in [the failure case](failure-case-timezone.md) a compliance issue rather t
 
 ## Data protection
 
-The GDPR position is that the customer company is the controller of its employees' working-time
-data and WorkTracker is the processor. The public legal set on the site sets out that framing,
-the categories of data processed, the retention constraints and the deletion path.
+WorkTracker's data-protection model treats the customer organization as the controller of its
+employees' working-time data and WorkTracker as the processor. The public legal set on the
+site sets out that framing, the categories of data processed, the retention constraints and
+the deletion path.
 
 Two product decisions follow from privacy by design rather than from a checklist.
 
@@ -102,13 +103,32 @@ looks less flexible and is deliberately so: intermediate modes produce a system 
 the employee nor the employer can state plainly whether location is being recorded, and consent
 and transparency both depend on being able to state it plainly.
 
-**Sensitive values never reach logs.** Enforced by a lint rule rather than a convention, as
-described in the security document.
+**Credentials and tokens are kept out of logs.** Enforced by a lint rule rather than by
+convention, as described in the security document.
 
 ## What is not documented here
 
 The gap analysis between the product's current behaviour and the draft Royal Decree names
 specific places where they do not align. That analysis is not published, for the same reason
-the risk register is not: it is a precise list of where a live system falls short of a rule
-that may become binding, and it belongs in a conversation with context rather than on a public
+the risk register is not: it is a precise list of where the product falls short of a rule that
+may become binding, and it belongs in a conversation with context rather than on a public
 page.
+
+## Official sources
+
+Primary sources for the obligations referenced above. Each supports a claim made in this
+document; none is included to broaden its legal scope.
+
+- **Estatuto de los Trabajadores** (consolidated text), for the daily recording duty and the
+  part-time and overtime provisions: [BOE-A-2015-11430](https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430)
+- **Real Decreto 1561/1995**, on special working-time arrangements, for the duty to inform
+  worker representatives about overtime: [BOE-A-1995-21346](https://www.boe.es/buscar/act.php?id=BOE-A-1995-21346)
+- **Regulation (EU) 2016/679 (GDPR)**, for the controller and processor roles and the
+  data-protection principles referenced: [EUR-Lex 32016R0679](https://eur-lex.europa.eu/eli/reg/2016/679/oj)
+- **Draft Royal Decree developing the working-time recordkeeping regime**, published for public
+  hearing by the Ministry of Labour and Social Economy and not enacted as of August 2026.
+  Draft texts are published through the ministry's public participation portal:
+  [mites.gob.es](https://www.mites.gob.es/es/participacion/publica/index.htm)
+
+Legal interpretation of these sources is a matter for qualified advisers. They are cited here
+to show which texts the engineering decisions were derived from.

@@ -26,8 +26,8 @@ four surfaces over one backend.
 | Public site | Astro | Marketing, pricing, legal set, public help |
 | Backend | Supabase: PostgreSQL, Auth, Edge Functions | Data, authentication, authorization, server-side operations, scheduled maintenance |
 
-The mobile app is built on Clean Architecture with MVVM in the presentation layer, currently
-around 730 source files. Domain entities hold no serialization and no framework dependencies.
+The mobile app is built on Clean Architecture with MVVM in the presentation layer. Domain
+entities hold no serialization and no framework dependencies.
 Data sources and repositories return a `Result` type rather than throwing, so failure is part
 of the signature and callers cannot ignore it. These are not stylistic preferences: they are
 enforced by custom lint rules, described in the

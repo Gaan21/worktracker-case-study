@@ -53,9 +53,22 @@ The contract currently assumes all workers in a company share one timezone. That
 wrong for a company operating in both mainland Spain and the Canary Islands.
 
 The approved target model resolves timezone per work center, with a remote worker modelled as
-their own work center. The workday snapshot, the read-path repointing, the work centers table
-and the removal of the per-user override have landed. The full resolution model has not. It is
-recorded as in-progress.
+their own work center. Its status, as recorded in the decision entry:
+
+**Implemented.** The immutable per-workday timezone snapshot, with backfill for existing
+records. Repointing of every read path onto the snapshot, so no read path re-resolves from the
+live company setting. The work centers table and per-user assignment, with the creation-path
+resolver using the worker's work-center timezone and falling back to the company value.
+Removal of the per-user timezone override. Server-side clock attestation.
+
+**Partially implemented.** Creation paths resolve by work center where one is assigned and
+fall back to the company timezone otherwise, so the model is in force for assigned workers
+and not yet universal.
+
+**Not started.** Unification of what the reporting functions return, and propagation of the
+per-workday snapshot through the client-side time service on both surfaces.
+
+This is recorded as in-progress rather than described as finished.
 
 ## See also
 

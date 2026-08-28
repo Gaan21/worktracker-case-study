@@ -29,19 +29,20 @@ flowchart LR
     class review,fail human
 ```
 
-The feedback edge is the part that matters. A failure that produces only a fix repeats. A
-failure that produces a rule does not.
+The feedback edge is the part that matters. A failure that produces only a fix is likely to
+repeat. A failure that produces an enforceable rule is much less likely to.
 
 ## Two sources of authority
 
 Agent instructions in every repository distinguish two questions that are easy to conflate.
 
 **How to implement** lives in a private guidelines repository, included in each product
-repository as a git submodule at `_guidelines/`. It covers five stacks with around seventy-eight
-skills, versioned with its own changelog under a `guides@vX.Y.Z` scheme so a repository pins a
-known revision rather than tracking a moving target. Skills are authored once and generated
-into per-runtime instruction files, so the same rule reaches different agent runtimes without
-being maintained three times.
+repository as a git submodule at `_guidelines/`. It is organized as reusable engineering
+guideline modules, one per topic, covering each stack the product uses — Flutter, Supabase,
+Next.js and Astro — plus shared git and agent conventions. It is versioned with its own
+changelog under a `guides@vX.Y.Z` scheme, so a repository pins a known revision rather than
+tracking a moving target. Modules are authored once and generated into per-runtime instruction
+files, so the same rule reaches different agent runtimes without being maintained three times.
 
 **What the product does and why** lives in a separate product knowledge base: business rules,
 role capabilities, flows, surfaces, decisions, risks, and the cross-surface contracts. It is
@@ -160,8 +161,8 @@ server-only imports reaching client code. No environment variables read in the b
 
 **Process.** The suppression rule described above.
 
-Each rule is a defect class that will not be found again in review, because it cannot reach
-review.
+Each rule encodes a defect class that the toolchain now catches at author time, so covered
+occurrences are blocked before they reach review.
 
 ## Gates and review
 
@@ -215,7 +216,8 @@ four schema migrations with database test coverage. Written up in full in
 [the failure case](failure-case-timezone.md).
 
 **An agent behaviour that became a guard.** Silent lint suppressions, addressed by the rule and
-the pre-write hook described above. Small, and it closed the failure mode permanently.
+the pre-write hook described above. Small, and it removed the incentive that made the failure
+mode attractive.
 
 **A process gap that became an automated check.** The knowledge closeout contract has three
 valid values, and `not-needed` is the cheap one. A sprint closure review — itself an agent task
@@ -243,8 +245,8 @@ process that had let it through.
 
 This is not free, and presenting it as free would be dishonest.
 
-Writing a task file takes longer than describing a change in a sentence. Maintaining seventy-eight
-skills and a knowledge base is real work that produces no features. A custom lint rule needs
+Writing a task file takes longer than describing a change in a sentence. Maintaining the
+guideline modules and the knowledge base is real work that produces no features. A custom lint rule needs
 tests and it will produce false positives that need carve-outs. Runtime guards occasionally block
 something legitimate.
 

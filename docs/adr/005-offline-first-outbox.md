@@ -13,8 +13,8 @@ A clock-in is a labour record that the employer must retain for four years and p
 request. If registering one depends on a network round trip, then a bad signal produces either
 no record or a record with the wrong time, and the employee carries the consequences.
 
-The system therefore has to guarantee two things that pull against each other: the record
-exists the moment the user acts, and the same real-world action never becomes two records.
+The system therefore has to satisfy two requirements that pull against each other: the record
+exists the moment the user acts, and a retried action does not become a second record.
 
 ## Decision
 
@@ -40,8 +40,8 @@ shell, the router, and a gate widget.
 
 ## Consequences
 
-Clocking is never blocked by connectivity, and retries are safe because an uncertain outcome
-can always be repeated.
+Clocking is not blocked by connectivity, and retries are safe within the deduplication window
+because an uncertain outcome can be repeated without creating a second record.
 
 The local database is a real database with a versioned schema and explicit upgrade paths.
 Every schema change must migrate devices holding unsynced records, and a mistake destroys data

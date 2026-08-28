@@ -123,8 +123,8 @@ rather than in a client that happens to behave.
 
 ## Why recurrence is less likely
 
-The class of defect is now blocked at author time in two languages, so the common cases cannot
-reach review.
+The class of defect is now checked at author time in two languages, so occurrences within the
+rules' scope are blocked before they reach review.
 
 The invariant lives in one file with one owner, so a disagreement between surfaces is a
 contradiction against a document rather than an argument between two plausible implementations.
