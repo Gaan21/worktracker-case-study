@@ -76,8 +76,9 @@ small decision with a reason: making it a first-class argument would have create
 source of truth for a value that already belongs to the punch, and would have forced a
 signature change on a function that several paths call.
 
-The consequence is that the retry logic can be aggressive without being dangerous. An
-uncertain outcome is always safe to retry.
+The consequence is that the retry logic can be aggressive without being dangerous. Within the
+deduplication window, an uncertain outcome can be retried safely using the same idempotency
+key.
 
 ## Retry and failure
 
