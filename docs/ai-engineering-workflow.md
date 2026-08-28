@@ -140,10 +140,10 @@ policy. Changing agent tooling does not silently drop the guardrails.
 
 ## Lint rules as institutional memory
 
-Thirty-three custom Dart lint rules run against the mobile codebase, split across eighteen
-errors, twelve warnings and three informational. Thirteen custom ESLint rules cover the web and
-panel stack. The Dart rules are a published package with their own test suite and changelog,
-and there is a separate repository holding fixtures to test rules against.
+Around fifty custom Dart lint rules currently enforce architectural, quality and correctness
+constraints on the mobile codebase. Thirteen custom ESLint rules cover the web and panel
+stack. The Dart rules live in a separate package with their own test suite and changelog, and
+there is a further repository holding fixtures to test rules against.
 
 They fall into recognizable groups.
 
@@ -159,7 +159,8 @@ never closed. Missing `super.dispose()`.
 raw exception messages surfaced to users. No direct database client in UI components. No
 server-only imports reaching client code. No environment variables read in the browser bundle.
 
-**Process.** The suppression rule described above.
+**Process.** Lint suppressions are governed too, though that control runs as the pre-write
+hook described above rather than as one of these rules.
 
 Each rule encodes a defect class that the toolchain now catches at author time, so covered
 occurrences are blocked before they reach review.
@@ -215,8 +216,8 @@ a cross-surface time contract, three new lint rules, an equivalent rule in the w
 four schema migrations with database test coverage. Written up in full in
 [the failure case](failure-case-timezone.md).
 
-**An agent behaviour that became a guard.** Silent lint suppressions, addressed by the rule and
-the pre-write hook described above. Small, and it removed the incentive that made the failure
+**An agent behaviour that became a guard.** Silent lint suppressions, addressed by the
+pre-write hook described above. Small, and it removed the incentive that made the failure
 mode attractive.
 
 **A process gap that became an automated check.** The knowledge closeout contract has three
