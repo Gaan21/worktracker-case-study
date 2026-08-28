@@ -138,6 +138,9 @@ I would not claim it cannot happen again. Lint rules have path scopes and approv
 lists, and something outside them will eventually be written. The claim is narrower: the
 cheapest path is now the correct one, and the expensive path is visible.
 
+The three lint rules described here are published, together with their tests and documented
+limitations, in [dart-architecture-lints](https://github.com/Gaan21/dart-architecture-lints#the-clearest-example-a-timezone-regression).
+
 ## What is still open
 
 The contract currently assumes all workers in a company share one timezone. That assumption is
