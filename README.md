@@ -1,89 +1,121 @@
-# WorkTracker — Architecture Case Study
+# WorkTracker — Engineering Case Study
 
-> An independent SaaS for time tracking, compliance workflows, and auditability for Spanish SMBs.
+WorkTracker is a workforce time-tracking product for Spanish small and mid-sized companies.
+Employees record their workday from a mobile app that keeps working without network. Managers
+review incidents and corrections, and the company keeps a traceable four-year record of what
+happened and who changed it.
 
-This repository is a **public architecture case study** for [WorkTracker](https://worktracker.es).
-It contains **no private source code** — only design documents, Architecture Decision Records (ADRs), and diagrams.
+This repository is a public case study. It contains design documents, architecture decision
+records, and diagrams. It contains no product source code.
 
-## Why this repo exists
+**Live product:** [worktracker.es](https://worktracker.es)
 
-As an independent builder, I can't open-source the full product. But the architectural decisions behind it — offline-first design, auth strategies, boundary design, CI guardrails — are worth sharing. This repo makes those decisions visible to collaborators, recruiters, and anyone interested in pragmatic architecture for small SaaS products.
+## My role
 
-## System overview
+I am the only engineer on the product. I own the product decisions, the architecture, the
+implementation across mobile, web, backend and data, the deployment pipeline, and the
+engineering system that AI agents work inside. I have been building it since August 2025,
+alongside full-time employment as a software engineer.
 
-```
-┌─────────────────┐     ┌───────────────────┐     ┌──────────────────┐
-│  Astro Landing   │     │  Next.js Web Panel │     │  Supabase        │
-│  (marketing)     │     │  (admin portal)    │────▶│  PostgreSQL      │
-└─────────────────┘     └───────────────────┘     │  Edge Functions  │
-                               │                  └──────────────────┘
-                               ▼
-                        ┌───────────────────┐
-                        │  Cloudflare       │
-                        │  (CDN + DNS + WAF)│
-                        └───────────────────┘
-                               │
-                               ▼
-                        ┌───────────────────┐
-                        │  CI/CD Pipeline   │
-                        │  (guardrails)     │
-                        └───────────────────┘
-```
+## Current status
 
-**Flutter mobile** is part of the broader product ecosystem and is planned for future expansion. It is not currently the primary client for the shipped product.
+The product is deployed and usable. The web panel and public site are live. The mobile
+applications are distributed as beta builds through a closed Google Play test and TestFlight.
 
-## Key architecture decisions
+WorkTracker does not yet have meaningful commercial traction, and this case study makes no
+claims about users, revenue or adoption. What it documents is the engineering: the decisions,
+the constraints that shaped them, and the system that keeps a single engineer shipping
+reliable changes.
 
-| # | Decision | Status | ADR |
-|---|----------|--------|-----|
-| 1 | Astro for marketing landing + Next.js for admin panel | Accepted | [ADR-001](docs/adr/001-astro-nextjs-split.md) |
-| 2 | Supabase/PostgreSQL as primary data layer | Accepted | [ADR-002](docs/adr/002-supabase-postgresql.md) |
-| 3 | Cloudflare for CDN, DNS, WAF, and deployment | Accepted | [ADR-003](docs/adr/003-cloudflare-deploy.md) |
-| 4 | CI/CD guardrails with versioned guidelines and lint enforcement | Accepted | [ADR-004](docs/adr/004-ci-guardrails.md) |
-| 5 | Offline-first as a product principle (Flutter planned) | Accepted | [ADR-005](docs/adr/005-offline-first-principle.md) |
+## Architecture at a glance
 
-## Current stack
+```mermaid
+flowchart TB
+    subgraph clients["Clients"]
+        app["Flutter app<br/>employees + managers"]
+        panel["Next.js panel<br/>administration"]
+        site["Astro site<br/>public + legal + help"]
+    end
 
-| Layer | Technology |
-|-------|-----------|
-| **Landing** | Astro |
-| **Web Panel** | Next.js, TypeScript |
-| **Data** | Supabase, PostgreSQL, Edge Functions |
-| **Infra** | Cloudflare (CDN, DNS, WAF, deployment) |
-| **Mobile** | Flutter (planned, part of broader ecosystem) |
-| **Delivery** | CI/CD pipelines, AI-assisted delivery guardrails, versioned guidelines |
+    subgraph cf["Cloudflare"]
+        edge["CDN · DNS · WAF"]
+    end
 
-## Directory structure
+    subgraph sb["Supabase"]
+        fn["Edge Functions<br/>server-side operations"]
+        rpc["PostgreSQL functions<br/>SECURITY DEFINER"]
+        db[("PostgreSQL<br/>Row Level Security")]
+    end
 
-```
-worktracker-case-study/
-├── README.md
-├── LICENSE
-└── docs/
-    ├── adr/                    # Architecture Decision Records
-    │   ├── 001-astro-nextjs-split.md
-    │   ├── 002-supabase-postgresql.md
-    │   ├── 003-cloudflare-deploy.md
-    │   ├── 004-ci-guardrails.md
-    │   └── 005-offline-first-principle.md
-    ├── diagrams/               # Architecture diagrams
-    │   └── system-overview.md
-    └── stack.md                # Full technology breakdown
+    local[("On-device SQLite<br/>outbox")]
+
+    app <--> local
+    app --> fn
+    panel --> fn
+    panel --> rpc
+    site --> edge
+    panel --> edge
+    fn --> rpc
+    rpc --> db
+
+    classDef store fill:#0b3d2e,stroke:#1f7a5c,color:#e6fff4
+    class db,local store
 ```
 
-## What you won't find here
+The Flutter app is the employee client and works offline. The Next.js panel is deliberately
+scoped to administration. Every write that matters passes through a server-side boundary, and
+PostgreSQL Row Level Security is the last line of defence rather than the only one.
 
-- Private source code (Flutter, Next.js, Astro, or any other)
-- Business logic or domain models with real data
-- Deployment configurations or infrastructure secrets
-- Customer data or PII
+## Where to go next
+
+| Document | What it covers |
+|---|---|
+| [Architecture](docs/architecture.md) | Surfaces, boundaries, deployment topology, and why the system is split this way |
+| [Offline-first](docs/offline-first.md) | Why clocking must work without network, the outbox model, retry and failure behaviour |
+| [Security and multi-tenancy](docs/security-and-multitenancy.md) | Company isolation, capability-based authorization, append-only audit history |
+| [Compliance by design](docs/compliance-by-design.md) | Turning Spanish and EU recordkeeping duties into product and schema requirements |
+| [AI-assisted engineering workflow](docs/ai-engineering-workflow.md) | How agents are scoped, constrained, reviewed, and how failures become rules |
+| [Failure case: the UTC display regression](docs/failure-case-timezone.md) | A real defect, its root cause, and the six changes made so the class cannot recur |
+| [Decision records](docs/adr/) | Nine ADRs covering the decisions with real trade-offs |
+
+## Engineering challenges worth reading about
+
+**Offline clocking that cannot duplicate records.** A clock-in is a labour record with legal
+weight. It has to survive a phone with no signal, and it must not turn into two records when
+the phone reconnects and the user has retried. The answer is an outbox in local SQLite with a
+client-generated idempotency key that the server honours for 72 hours.
+See [offline-first](docs/offline-first.md).
+
+**Time that means the same thing on every surface.** A workday belongs to a calendar date, but
+the device, the server and the company are not necessarily in the same timezone. A production
+bug forced this into a single cross-surface contract enforced by custom lint rules and an
+immutable per-workday timezone snapshot in the database.
+See [the failure case](docs/failure-case-timezone.md).
+
+**Authorization that does not depend on role names.** Permissions resolve from capabilities
+held server-side, not from string comparisons against a role label in the client.
+See [security and multi-tenancy](docs/security-and-multitenancy.md).
+
+**Regulatory constraints as engineering requirements.** Four-year retention, append-only
+history and attributable corrections are not features. They are properties the schema has to
+guarantee. See [compliance by design](docs/compliance-by-design.md).
+
+**Keeping AI agents inside a disciplined process.** Agents write a large share of the code.
+They work from scoped tasks, versioned guidelines and a product knowledge base, and they are
+constrained by runtime hooks and custom lint rules that block specific failure modes before a
+file is written. See [the workflow](docs/ai-engineering-workflow.md).
+
+## What you will not find here
+
+Product source code, database schemas, RLS policy definitions, RPC signatures, edge function
+internals, infrastructure configuration, or customer data. The security documents describe
+boundaries and patterns, not the enforcement details themselves.
 
 ## Links
 
 - **Product:** [worktracker.es](https://worktracker.es)
-- **Author:** [Luciano Plaza](https://linkedin.com/in/luciano-plaza-grueso)
-- **GitHub:** [Gaan21](https://github.com/Gaan21)
+- **Author:** Luciano Plaza — [LinkedIn](https://linkedin.com/in/luciano-plaza-grueso) · [GitHub](https://github.com/Gaan21)
 
 ---
 
-<sub>This is an architecture documentation repository, not a runnable codebase.</sub>
+<sub>Documentation repository. Not a runnable codebase.</sub>
