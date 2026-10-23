@@ -57,3 +57,13 @@ described in [security and multi-tenancy](../security-and-multitenancy.md).
 
 An earlier version of this record stated that Cloudflare Pages hosted both surfaces. That was
 never true of the panel. Corrected in August 2026.
+
+## Follow-up under verification
+
+An availability investigation found that rejecting an unknown request by redirecting it to
+login can amplify its cost: a client that follows the redirect triggers a full server render.
+An application-side change now rejects unknown paths before authentication or rendering;
+recognized protected routes retain their session checks. Local unit tests verify that early
+rejection, and the complete local browser suite passes in the deployment runtime.
+A deployed before/after observation is still pending.
+No production resource savings or resolution of the incident are claimed yet.
