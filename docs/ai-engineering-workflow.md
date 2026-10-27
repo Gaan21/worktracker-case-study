@@ -142,8 +142,10 @@ policy. Changing agent tooling does not silently drop the guardrails.
 
 Around fifty custom Dart lint rules currently enforce architectural, quality and correctness
 constraints on the mobile codebase. Thirteen custom ESLint rules cover the web and panel
-stack. The Dart rules live in a separate package with their own test suite and changelog, and
-there is a further repository holding fixtures to test rules against.
+stack. The Dart rules live in a separate public package with their own test suite and
+changelog, and there is a further repository holding fixtures to test rules against. The app
+consumes that package at a locked commit, so a clean checkout resolves every dependency
+without credentials.
 
 They fall into recognizable groups.
 
